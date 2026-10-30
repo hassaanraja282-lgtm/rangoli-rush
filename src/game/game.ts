@@ -40,12 +40,12 @@ import { Button, Label } from './ui3d.js';
 type Mode = 'menu' | 'tutorial' | 'playing' | 'result';
 
 const BOWL_SLOTS: [number, number][] = [
-  [-0.27, -0.2],
-  [0.27, -0.2],
-  [-0.3, -0.37],
-  [0.3, -0.37],
-  [-0.22, -0.04],
-  [0.22, -0.04],
+  [-0.28, -0.26],
+  [0.28, -0.26],
+  [-0.31, -0.43],
+  [0.31, -0.43],
+  [-0.24, -0.1],
+  [0.24, -0.1],
 ];
 
 const TILT = 0.52; // board tilt toward the player (rad from horizontal)
@@ -239,7 +239,7 @@ export class RangoliGame extends createSystem({}) {
   layoutCourtyard() {
     // the courtyard floor follows the rig horizontally; chowki sits under board + bowls
     const ch = this.courtyard.chowki;
-    const p = new Vector3(0, -0.55, -0.27);
+    const p = new Vector3(0, -0.52, -0.3);
     this.rig.localToWorld(p);
     ch.position.copy(p);
     ch.rotation.y = this.rig.rotation.y;
@@ -371,7 +371,7 @@ export class RangoliGame extends createSystem({}) {
     this.bowls = colors.map((c, i) => {
       const b = new Bowl(c);
       const [x, z] = BOWL_SLOTS[i % BOWL_SLOTS.length];
-      b.group.position.set(x, -0.53, z);
+      b.group.position.set(x, -0.5, z);
       b.group.rotation.y = Math.atan2(-x, -z) + Math.PI;
       this.rig.add(b.group);
       return b;
