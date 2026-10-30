@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Rangoli Rush — a seated, hands-only mixed-reality rangoli puzzle for Meta Quest." />
+    <meta name="theme-color" content="#2a1418" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg transform='translate(32 32)'%3E%3Cellipse rx='7' ry='15' cy='-14' fill='%23ff7417'/%3E%3Cellipse rx='7' ry='15' cy='-14' fill='%23ffc22e' transform='rotate(90)'/%3E%3Cellipse rx='7' ry='15' cy='-14' fill='%23e8336d' transform='rotate(180)'/%3E%3Cellipse rx='7' ry='15' cy='-14' fill='%2300b3ad' transform='rotate(270)'/%3E%3Ccircle r='6' fill='%23fff1d6'/%3E%3C/g%3E%3C/svg%3E" />
+    <title>Rangoli Rush · hands-only MR for Meta Quest</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #1d1020; overflow: hidden; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+      #scene-container { position: fixed; inset: 0; }
+      #overlay {
+        position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+        background: radial-gradient(ellipse at 50% 40%, rgba(60,20,30,0.55), rgba(20,8,14,0.85));
+        z-index: 10; transition: opacity 0.35s;
+      }
+      #overlay.hidden { opacity: 0; pointer-events: none; }
+      .card {
+        text-align: center; color: #fff4e0; max-width: 560px; padding: 36px 40px; border-radius: 28px;
+        background: rgba(36, 16, 20, 0.9); border: 2px solid #ffb347; box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+      }
+      .card h1 { font: 700 54px Georgia, 'Times New Roman', serif; margin: 6px 0 4px; letter-spacing: 0.5px; }
+      .card p { color: #ffcf8a; margin: 6px 0 22px; font-size: 18px; line-height: 1.45; }
+      .card button {
+        font: 700 20px system-ui, sans-serif; border-radius: 999px; padding: 14px 28px; margin: 6px; cursor: pointer;
+        border: 2px solid #ffb347; background: #ff7417; color: #fff;
+      }
+      .card button.secondary { background: transparent; color: #ffcf8a; }
+      .card button:disabled { opacity: 0.55; cursor: default; background: #6b3a2a; }
+      #xr-status { margin-top: 16px; color: #e9d6c2; font-size: 14px; }
+      .emblem { width: 72px; height: 72px; }
+      ul.how { text-align: left; color: #e9d6c2; font-size: 15px; line-height: 1.6; margin: 18px auto 0; max-width: 420px; padding-left: 18px; }
+    </style>
+  </head>
+  <body>
+    <div id="scene-container"></div>
+    <div id="overlay">
+      <div class="card">
+        <svg class="emblem" viewBox="0 0 64 64"><g transform="translate(32 32)"><ellipse rx="7" ry="15" cy="-14" fill="#ff7417"/><ellipse rx="7" ry="15" cy="-14" fill="#ffc22e" transform="rotate(90)"/><ellipse rx="7" ry="15" cy="-14" fill="#e8336d" transform="rotate(180)"/><ellipse rx="7" ry="15" cy="-14" fill="#00b3ad" transform="rotate(270)"/><ellipse rx="5" ry="11" cy="-14" fill="#ffc22e" transform="rotate(45)"/><ellipse rx="5" ry="11" cy="-14" fill="#ff7417" transform="rotate(135)"/><ellipse rx="5" ry="11" cy="-14" fill="#00b3ad" transform="rotate(225)"/><ellipse rx="5" ry="11" cy="-14" fill="#e8336d" transform="rotate(315)"/><circle r="6" fill="#fff1d6"/></g></svg>
+        <h1>Rangoli Rush</h1>
+        <p>Pinch coloured powder, brush glowing petals and light up a rangoli — seated, hands only, right on your table.</p>
+        <button id="enter-xr" disabled>Loading…</button>
+        <button id="play-browser" class="secondary">Play in browser</button>
+        <div id="xr-status">Hands only · seated · ~5 minute sessions</div>
+        <ul class="how">
+          <li><b>Pinch</b> inside a bowl to scoop powder (or look at a bowl and pinch anywhere).</li>
+          <li><b>Hold the pinch</b> and brush over a petal of the matching colour.</li>
+          <li><b>Flick</b> — release fast toward the board to throw powder.</li>
+        </ul>
+      </div>
+    </div>
+    <script type="module" src="/src/index.ts"></script>
+  </body>
+</html>
