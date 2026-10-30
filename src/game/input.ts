@@ -16,18 +16,42 @@ export class HandState {
   velocity = new Vector3();
   private last = new Vector3();
   private hasLast = false;
+  /**
+   * Recent velocities (with age in seconds) sampled while the fingers were still
+   * closed. A release flick is judged from these, so the hand slowing down, or the
+   * pinch point jumping as thumb and finger separate, doesn't cancel the throw.
+   */
+  private hist: { v: Vector3; age: number }[] = [];
   ray = new Raycaster();
   constructor(public key: HandKey) {}
 
-  setPose(tip: Vector3, point: Vector3, dt: number) {
+  /** @param closed false while a tracked hand's fingers are opening (sample excluded from flick history). */
+  setPose(tip: Vector3, point: Vector3, dt: number, closed = true) {
     this.tip.copy(tip);
     this.point.copy(point);
     if (this.hasLast && dt > 0) {
       const v = point.clone().sub(this.last).divideScalar(dt);
       this.velocity.lerp(v, 0.5);
+      for (const h of this.hist) h.age += dt;
+      while (this.hist.length && this.hist[0].age > 0.15) this.hist.shift();
+      if (closed) this.hist.push({ v: this.velocity.clone(), age: 0 });
     }
     this.last.copy(point);
     this.hasLast = true;
+  }
+
+  /** Fastest closed-hand velocity over the last ~150 ms (falls back to the current velocity). */
+  peakVelocity(out = new Vector3()) {
+    if (!this.hist.length) return out.copy(this.velocity);
+    let best = -1;
+    for (const h of this.hist) {
+      const l = h.v.lengthSq();
+      if (l > best) {
+        best = l;
+        out.copy(h.v);
+      }
+    }
+    return out;
   }
 
   setPinch(p: boolean) {
@@ -39,6 +63,7 @@ export class HandState {
   lost() {
     this.tracked = false;
     this.hasLast = false;
+    this.hist.length = 0;
     this.velocity.set(0, 0, 0);
     this.setPinch(false);
   }
@@ -115,7 +140,8 @@ export class InputHub {
           origin.localToWorld(mid);
           hand.kind = 'hand';
           hand.tracked = true;
-          hand.setPose(a, mid, dt);
+          // fingers count as closed until they open past the pinch-on distance (plus a little slack)
+          hand.setPose(a, mid, dt, dist < PINCH_ON + 0.006);
           hand.setPinch(hand.pinching ? dist < PINCH_OFF : dist < PINCH_ON);
           seen[src.handedness as 'left' | 'right'] = true;
         } else if (src.gripSpace || src.targetRaySpace) {

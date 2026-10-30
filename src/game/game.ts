@@ -687,10 +687,11 @@ export class RangoliGame extends createSystem({}) {
     if (h.kind === 'mouse') return; // mouse keeps its powder until a new bowl is picked
     this.world.scene.remove(l.orb);
     this.loaded.delete(h.key);
-    const speed = h.velocity.length();
+    const vel = h.peakVelocity();
+    const speed = vel.length();
     tmpC.set(POWDERS[l.color].color);
     if (speed > 0.55 && this.playable()) {
-      const dir = h.velocity.clone().normalize();
+      const dir = vel.clone().normalize();
       const plane = this.boardPlane();
       const ray = new Raycaster(h.point.clone(), dir);
       const hit = ray.ray.intersectPlane(plane, new Vector3());
